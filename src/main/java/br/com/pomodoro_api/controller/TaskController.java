@@ -1,6 +1,7 @@
 package br.com.pomodoro_api.controller;
 
 import br.com.pomodoro_api.model.Task;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,13 @@ public class TaskController {
         return ResponseEntity.ok(tasks.stream()
                 .filter(task -> task.getCompleted().equals(completed))
                 .collect(Collectors.toList()));
+    }
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        task.setId(nextId.getAndIncrement());
+        tasks.add(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(task);
     }
 
     @GetMapping("/{id}")
